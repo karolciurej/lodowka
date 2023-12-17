@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.card{
+    width: 200px;
+    height: 200px;
+    background-color: #fff;
+    border-radius: 8px;
+    border: 1px solid black;
+    position: absolute;
+}
+
+#button{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+#resize{
+    position: absolute;
+    width: 20px;
+    bottom: 5px;
+    right: 5px;
+}
