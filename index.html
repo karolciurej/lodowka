@@ -5,10 +5,18 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="/dist/output.css" rel="stylesheet">
+    <link rel="stylesheet" href="./src/style.css">
+    <script src="./public/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+
     <title>Vite + TS</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <form id="fridge-form">
+        <input type="text" id="fridge-name" placeholder="Enter Fridge Name" />
+        <button type="submit">Create/Load</button>
+    </form>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

@@ -1,81 +1,177 @@
+declare var tinymce: any;
+
 export default class Card {
-    id: number;
-    width: number = 200;
-    height: number = 200;
-    isDragging: boolean = false;
-    dragOffsetX: number = 0;
-    dragOffsetY: number = 0;
-    maxIndex: number = 0;
+    
+    private static maxIndex: number = 0;
+    public static totalCards: number = 0;
+    public static currentCards: number = 0;
+    
+    private readonly id: number;
+    private width: number = 200;
+    private height: number = 200;
+    private isDragging: boolean = false;
+    private isResizing: boolean = false;
+    private positionX: number = 0;
+    private positionY: number = 0;
+    private text: string = ''; 
 
     constructor(id: number) {
         this.id = id;
+        Card.totalCards++; 
     }
 
     createCard() {
         const cardDiv = document.createElement('div');
-        cardDiv.style.zIndex = "0"
+        cardDiv.style.zIndex = "0";
         cardDiv.addEventListener('mousedown', (event) => this.startDragging(event, cardDiv));
-        cardDiv.addEventListener('click', () => this.bringToFront(cardDiv)); // Add click event listener
+        cardDiv.addEventListener('mousedown', () => this.bringToFront(cardDiv));
         cardDiv.classList.add('card');
         cardDiv.id = `card-${this.id}`;
         cardDiv.style.position = 'absolute';
+        cardDiv.style.left = "50px"
+        cardDiv.style.top = "100px"
+        cardDiv.style.width = `${this.width}px`;
+        cardDiv.style.height = `${this.height}px`;
 
         const deleteButton = document.createElement('img');
-        deleteButton.id = "button";
         deleteButton.src = "../public/delete.svg";
         const resizeButton = document.createElement('img');
-        resizeButton.id = "resize";
         resizeButton.src = "../public/resize.svg";
-        deleteButton.addEventListener('click', () => {
-            this.delete();
-        });
-        resizeButton.addEventListener('click', () => {
-            this.resize();
-        });
+        const editButton = document.createElement('img');
+        editButton.src = "../public/edit.svg";
+
+        resizeButton.addEventListener('mousedown', () => this.bringToFront(cardDiv));
+        deleteButton.addEventListener('click', () => this.delete());
+        resizeButton.addEventListener('mousedown', (event) => this.startResizing(event)); // Changed to mousedown for resizing
+        editButton.addEventListener('click', () => this.edit());
+
+        deleteButton.id = "delete"
+        resizeButton.id = "resize"
+        editButton.id = "edit"
+
+        deleteButton.draggable = false;
+        resizeButton.draggable = false;
+        editButton.draggable = false;
+
+
+        const textArea = document.createElement('div'); // Using div for TinyMCE
+        textArea.id = `text-${this.id}`;
+        textArea.classList.add('text-area');
+        textArea.textContent = this.text;
+        
+        cardDiv.appendChild(textArea);
         cardDiv.appendChild(deleteButton);
         cardDiv.appendChild(resizeButton);
+        cardDiv.appendChild(editButton)
 
+    
         const appDiv = document.querySelector<HTMLDivElement>('#cont');
-        if (appDiv) {
-            appDiv.appendChild(cardDiv);
-        }
+        appDiv?.appendChild(cardDiv);
 
-        document.addEventListener("mousemove", (event) => this.dragCard(event));
-        document.addEventListener("mouseup", () => this.stopDragging());
+        document.addEventListener("mousemove", (event) => {
+            this.dragCard(event);
+            this.resizeCard(event, cardDiv); 
+        });
+        document.addEventListener("mouseup", () => this.stopActions());
+        Card.currentCards++; 
     }
 
     delete() {
-        const element = document.getElementById(`card-${this.id}`);
-        element?.remove();
+        document.getElementById(`card-${this.id}`)?.remove();
+        Card.currentCards--; 
+        document.getElementById('current-cards')!.textContent = `Current cards: ${Card.currentCards}`;
+
     }
 
-    resize() {
-        // Implement resize logic if needed
+    startResizing(event: MouseEvent) {
+        event.stopPropagation(); 
+        this.isResizing = true;
+    }
+
+    resizeCard(event: MouseEvent, cardElement: HTMLDivElement) {
+        if (this.isResizing) {
+            this.width = event.clientX - cardElement.getBoundingClientRect().left;
+            this.height = event.clientY - cardElement.getBoundingClientRect().top;
+            cardElement.style.width = `${this.width}px`;
+            cardElement.style.height = `${this.height}px`;
+        }
     }
 
     startDragging(event: MouseEvent, cardElement: HTMLDivElement) {
         this.isDragging = true;
-        this.dragOffsetX = event.clientX - cardElement.getBoundingClientRect().left;
-        this.dragOffsetY = event.clientY - cardElement.getBoundingClientRect().top;
+        this.positionX = event.clientX - cardElement.getBoundingClientRect().left;
+        this.positionY = event.clientY - cardElement.getBoundingClientRect().top;
     }
 
     dragCard(event: MouseEvent) {
         if (this.isDragging) {
             const cardElement = document.getElementById(`card-${this.id}`) as HTMLDivElement;
-            cardElement.style.left = (event.clientX - this.dragOffsetX) + 'px';
-            cardElement.style.top = (event.clientY - this.dragOffsetY) + 'px';
+            cardElement.style.left = `${event.clientX - this.positionX}px`;
+            cardElement.style.top = `${event.clientY - this.positionY}px`;
         }
     }
 
-    stopDragging() {
+    stopActions() {
         this.isDragging = false;
+        this.isResizing = false;
     }
 
     bringToFront(cardElement: HTMLDivElement) {
-        console.log(cardElement.style.zIndex)
-        cardElement.style.zIndex = (this.maxIndex + 1).toString();
-        this.maxIndex++
-        console.log(cardElement.style.zIndex)
-
+        cardElement.style.zIndex = (++Card.maxIndex).toString();
     }
+    edit() {
+        const modal = document.createElement('div');
+        modal.classList.add('modal');
+    
+        const textArea = document.createElement('textarea');
+        textArea.id = `editor-${this.id}`;
+        modal.appendChild(textArea);
+    
+        const saveButton = document.createElement('button');
+        saveButton.style.backgroundImage = "url('../public/save.svg')";
+        saveButton.style.position = "absolute";
+        saveButton.style.right = "68px";
+        saveButton.style.bottom = "22px";
+        modal.appendChild(saveButton);
+    
+        const closeButton = document.createElement('button');
+        closeButton.style.backgroundImage = "url('../public/close.svg')";
+        closeButton.style.position = "absolute";
+        closeButton.style.right = "44px";
+        closeButton.style.bottom = "22px";
+        modal.appendChild(closeButton);
+    
+        document.body.appendChild(modal);
+    
+        tinymce.init({
+            selector: `#editor-${this.id}`,
+            menubar: true,
+            toolbar: true,
+            setup: editor => {
+                editor.on('init', () => {
+                    editor.setContent(this.text);
+                });
+            }
+
+        });
+    
+        saveButton.addEventListener('click', () => {
+            const editor = tinymce.get(`editor-${this.id}`);
+            if (editor) {
+                this.text = editor.getContent(); 
+                document.querySelector(`#text-${this.id}`).innerHTML = this.text
+                editor.remove();
+            }
+            modal.remove();
+        });
+    
+        closeButton.addEventListener('click', () => {
+            const editor = tinymce.get(`editor-${this.id}`);
+            if (editor) {
+                editor.remove();
+            }
+            modal.remove();
+        });
+    }
+    
 }

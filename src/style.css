@@ -2,19 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-.card{
-    width: 200px;
-    height: 200px;
-    background-color: #fff;
-    border-radius: 8px;
-    border: 1px solid black;
+.card {
+    min-width: 200px;
+    min-height: 200px;
+    background-color: #f3f79d; 
     position: absolute;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
 }
-
-#button{
+#delete{
     position: absolute;
     top: 5px;
     right: 5px;
+    cursor:pointer;
 }
 
 #resize{
@@ -22,4 +21,86 @@
     width: 20px;
     bottom: 5px;
     right: 5px;
+    cursor: nwse-resize;
 }
+
+#edit{
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    cursor:pointer;
+}
+
+.text-area{
+    height: calc( 100% - 70px );
+    width: calc( 100% - 20px );
+    margin: 35px 10px 35px 10px;
+
+}
+.text-area p{
+    height: 100%;
+    width: 100%;
+    display: block;
+    overflow: auto;
+    overflow-wrap: break-word;
+}
+
+#card-info {
+    background-color: #f3f79d; 
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    top: 5px;
+    right: 5px;
+    position: absolute;
+  }
+  
+  #card-info span {
+    margin-bottom: 5px;
+    font-size: 14px;
+  }
+
+
+  .modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    padding: 20px;
+    border-radius: 8px;
+}
+.modal button{
+    width: 26px;
+    height: 24px;
+    background-color: white;
+}
+
+#fridge-form {
+    background-color: #f3f79d; 
+    padding: 20px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); 
+    width: 300px; 
+    margin: auto;
+    position: fixed; 
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    text-align: center; 
+}
+#fridge-form input {
+    width: 100%; 
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd; 
+    border-radius: 4px;
+}
+
+#fridge-form button {
+    cursor: pointer;
+    padding: 8px 15px; 
+    border: 1px solid black;
+    border-radius: 4px; 
+    
+}
+
