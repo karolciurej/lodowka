@@ -4,6 +4,7 @@ export default class Card {
     private static maxIndex: number = 0;
     public static totalCards: number = 0;
     public static currentCards: number = 0;
+    private static readonly min: number = 200;
     private readonly id: string;
     private width: number = 200;
     private height: number = 200;
@@ -11,6 +12,8 @@ export default class Card {
     private isResizing: boolean = false;
     private positionX: number = 50;
     private positionY: number = 150;
+    private initialResizeX: number = 0;
+    private initialResizeY: number = 0;
     private text: string = ''; 
     private fridgeName: string;
     private left: number = 0;
@@ -126,16 +129,23 @@ export default class Card {
     startResizing(event: MouseEvent) {
         event.stopPropagation(); 
         this.isResizing = true;
+        this.initialResizeX = event.clientX - this.width;
+        this.initialResizeY = event.clientY - this.height;
     }
 
     resizeCard(event: MouseEvent, cardElement: HTMLDivElement) {
         if (this.isResizing) {
-            this.width = event.clientX - cardElement.getBoundingClientRect().left;
-            this.height = event.clientY - cardElement.getBoundingClientRect().top;
+            let newWidth = event.clientX - this.initialResizeX;
+            let newHeight = event.clientY - this.initialResizeY;
+
+            newWidth = Math.max(newWidth, Card.min);
+            newHeight = Math.max(newHeight, Card.min);
+
+            this.width = newWidth;
+            this.height = newHeight;
             cardElement.style.width = `${this.width}px`;
             cardElement.style.height = `${this.height}px`;
-            cardElement.style.backgroundColor = "#fff740"
-
+            cardElement.style.backgroundColor = "#fff740";
         }
     }
 

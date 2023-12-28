@@ -39,14 +39,15 @@
     height: calc( 100% - 70px );
     width: calc( 100% - 20px );
     margin: 35px 10px 35px 10px;
+    display: block;
+    overflow: auto;
+    overflow-wrap: break-word;
 
 }
 .text-area p{
     height: 100%;
     width: 100%;
-    display: block;
-    overflow: auto;
-    overflow-wrap: break-word;
+
 }
 
 #card-info {
