@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+*{
+    margin: 0;
+    padding: 0;
+}
 .card {
     min-width: 200px;
     min-height: 200px;
@@ -69,16 +73,19 @@
     z-index: 1000;
     padding: 20px;
     border-radius: 8px;
+    min-width: 300px;
+    min-height: 300px;
 }
 .modal button{
     width: 26px;
     height: 24px;
     background-color: white;
+    border: none;
 }
 
 #fridge-form {
     background-color: #f3f79d; 
-    padding: 20px;
+    padding: 20px; 
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); 
     width: 300px; 
     margin: auto;
@@ -89,7 +96,7 @@
     text-align: center; 
 }
 #fridge-form input {
-    width: 100%; 
+    width: 90%; 
     padding: 8px;
     margin-bottom: 10px;
     border: 1px solid #ddd; 
@@ -99,8 +106,7 @@
 #fridge-form button {
     cursor: pointer;
     padding: 8px 15px; 
-    border: 1px solid black;
     border-radius: 4px; 
-    
+
 }
 
