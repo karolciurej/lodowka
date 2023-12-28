@@ -111,7 +111,7 @@ export default class Card {
         cardElement.querySelector('#delete').removeEventListener('mousedown', this.delete);
         cardElement.querySelector('#resize').removeEventListener('mousedown', this.startResizing);
         cardElement.querySelector('#edit').removeEventListener('click', this.edit);
-    
+        
         cardElement.remove();
         
         Card.currentCards--; 
@@ -169,7 +169,9 @@ export default class Card {
 
     stopActions() {
         const cardElement = document.getElementById(`card-${this.id}`);
-        cardElement.style.backgroundColor = "#f3f79d"
+        if(cardElement){
+            cardElement.style.backgroundColor = "#f3f79d"            
+        }
 
         this.isDragging = false;
         this.isResizing = false;
